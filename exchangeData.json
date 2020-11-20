@@ -1,0 +1,51 @@
+[{
+  "stockName": "shivraj",
+  "stockExchange": "NSE",
+  "price": 100,
+  "volume": 19284
+},{
+  "stockName": "JSW",
+  "stockExchange": "NSE",
+  "price": 150,
+  "volume": 53672
+},{
+  "stockName": "BHARTIARTL",
+  "stockExchange": "BSE",
+  "price": 115,
+  "volume": 76892
+},{
+  "stockName": "ADANIPORTS",
+  "stockExchange": "NSE",
+  "price": 125,
+  "volume": 42098,
+},{
+  "stockName": "RELIANCE",
+  "stockExchange": "BSE",
+  "price": 175,
+  "volume": 80034
+},{
+  "stockName": "TITAN",
+  "stockExchange": "NSE",
+  "price": 140,
+  "volume": 29331
+},{
+  "stockName": "AXISBANK",
+  "stockExchange": "NSE",
+  "price": 515,
+  "volume": 59900
+},{
+  "stockName": "YESBANK",
+  "stockExchange": "BSE",
+  "price": 335,
+  "volume": 34200
+},{
+  "stockName": "HDFC",
+  "stockExchange": "BSE",
+  "price": 200,
+  "volume": 34200
+},{
+  "stockName": "ADANIGREEN",
+  "stockExchange": "BSE",
+  "price": 290,
+  "volume": 34200
+}]
