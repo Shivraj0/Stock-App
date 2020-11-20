@@ -5,14 +5,14 @@ module.exports = (app) => {
     app.post('/api/buy', controller.buy);
 
     // List all stocks.
-    // app.get('/api/list', controller.list);
+    app.get('/api/list', controller.list);
 
     // Fetch stock details.
-    // app.get('/api/stock/stockName', controller.find);
+    app.get('/api/:stockName', controller.find);
 
-    // Update note with note id.
-    // app.put('/api/update/stockName', controller.update);
+    // Update stock
+    app.put('/api/update', controller.update);
 
     // sell stock.
-    // app.delete('/api/sell/stockName', controller.sell);
+    app.delete('/api/sell/:stockName', controller.sell);
 }

@@ -1,10 +1,7 @@
 const stockSchema = require('../model/stock');
-const exchangeSchema = require('../model/exchange');
+// const exchangeSchema = require('../model/exchange');
 
-exports.buy = (req, res) => {
-    var stock = req.body.stockName;
-    var exchange = req.body.stockExchange;
-
+const verifyInput = (stock, exchange, price, volume) => {
     if(!stock){
         return res.status(400).send({
             message: "Stock Name is required.!!!"
@@ -13,90 +10,117 @@ exports.buy = (req, res) => {
         return res.status(400).send({
             message: "Exchange Board Name is required.!!!"
         });
-    };
-
-    var stockPrice;
-    const getPrice = (stock) => {
-        let price;
-        exchangeSchema.findOne({stockName: stock}, (err, doc) => {
-            // console.log('price', doc.price);
-            stockPrice = doc.price;
-            // console.log('price', price);
+    } else if(!price) {
+        return res.status(400).send({
+            message: "Buying price is required.!!!"
         });
-        // return price;
+    } else if(!volume) {
+        return res.status(400).send({
+            message: "Quantity of shares is required.!!!"
+        });
     };
+};
 
-    getPrice(stock);
-    console.log('price after call: ', stockPrice);
+exports.buy = (req, res) => {
+    const stock = req.body.stockName;
+    const exchange = req.body.stockExchange;
+    const price = req.body.buyPrice;
+    const volume = req.body.volume;
+
+    verifyInput(stock, exchange, price, volume);
 
     const newStock = stockSchema({
         stockName: stock,
         stockExchange: exchange,
-        buyPrice: stockPrice,
+        buyPrice: price,
+        volume: volume
     });
 
     stockSchema.findOne({stockName: newStock.stockName}, (err, note) => {
-        console.log(newStock.buyPrice)
+
         if(note) return res.status(400).json({message: 'You have already bought this stock.!'});
         
         newStock.save((err, doc) => {
             if(err) return res.status(400).send(err);
 
             res.status(201).json({
-                post: true,
+                POST: true,
                 status: "success",
                 details: doc
             });
         });
     });
+    
 };
 
-// exports.list = ((req, res) => {
-//     stockSchema.find((err, doc) => {
-//         if(err) return res.status(400).send(err);
-//         res.status(200).json(doc);
-//     });
-// });
+exports.list = ((req, res) => {
+    stockSchema.find((err, doc) => {
+        if(err) return res.status(400).send(err);
+        if(!doc) return res.status(404).json({
+            message: "You have not bought any stocks.!!!"
+        });
 
-// exports.find = ((req, res) => {
-//     stockSchema.findById(req.params.stockName, (err, doc) => {
-//         if(err) return res.status(400).send(err);
-//         if(!doc) return res.status(404).json({message: 'Stock with given Name Not found.!'});
+        res.status(200).json({
+            GET: true,
+            status: "success",
+            detais:doc
+        });
+    });
+});
 
-//         res.status(200).json(doc);
-//     });
-// });
+exports.find = ((req, res) => {
+    stockSchema.findOne({stockName: req.params.stockName}, (err, doc) => {
+        if(err) return res.status(400).send(err);
+        if(!doc) return res.status(404).json({
+            message: 'Stock with given Name Not found.!'
+        });
 
-// exports.update = ((req, res) => {
-//     if(!req.body.title || !req.body.author || !req.body.content) {
-//         return res.status(400).send({
-//             message: "Every field is required"
-//         });
-//     }
+        res.status(200).json({
+            GET: true,
+            status: "success",
+            details: doc
+        });
+    });
+});
 
-//     stockSchema.findByIdAndUpdate(req.params.stockName), {
-//         title: req.body.title,
-//         author: req.body.author,
-//         content: req.body.content
-//     }, {new: true}, ((err, doc) => {
-//         if(err) return res.status(400).send(err);
-//         if(!doc) return res.status(404).json({message: 'Stock with given Name NOT found.!'})
+exports.update = ((req, res) => {
 
-//         res.status(200).json({
-//             post: true,
-//             note: doc
-//         });
-//     });
-// });
+    const stock = req.body.stockName;
+    const exchange = req.body.stockExchange;
+    const price = req.body.buyPrice;
+    const volume = req.body.volume;
 
-// exports.sell = ((req, res) => {
-//     stockSchema.findByIdAndDelete(req.params.stockName, (err, doc) => {
-//         if(err) return res.status(400).send(err);
-//         if(!doc) return res.status(404).json({message: 'You dont have any Stock with this Name.!'})
+    verifyInput(stock, exchange, price, volume);
 
-//         res.status(200).send({
-//             delete: true,
-//             note: doc 
-//         });
-//     });
-// });
+    stockSchema.findOneAndUpdate({stockName: stock}, {
+        stockName: stock,
+        stockExchange: exchange,
+        buyPrice: price,
+        volume: volume
+    }, {returnNewDocument: true, useFindAndModify: false}).then((doc) => {
+        res.status(200).json({
+            PUT: true,
+            status: "success",
+            details: doc
+        });
+    })
+    .catch((err) => {
+        res.status(404).json({
+            message: 'Stock with given Name NOT found.!',
+        error: err
+        });
+    });
+});
+
+exports.sell = ((req, res) => {
+    stockSchema.findOneAndDelete({stockName: req.params.stockName}, (err, doc) => {
+        if(err) return res.status(400).send(err);
+        if(!doc) return res.status(404).json({message: 'You dont have any Stock with this Name.!'})
+
+        res.status(200).send({
+            DELETE: true,
+            status: "success",
+            details: doc 
+        });
+    });
+});

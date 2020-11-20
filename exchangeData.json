@@ -1,5 +1,5 @@
 [{
-  "stockName": "shivraj",
+  "stockName": "TATASTEEL",
   "stockExchange": "NSE",
   "price": 100,
   "volume": 19284
@@ -17,7 +17,7 @@
   "stockName": "ADANIPORTS",
   "stockExchange": "NSE",
   "price": 125,
-  "volume": 42098,
+  "volume": 42098
 },{
   "stockName": "RELIANCE",
   "stockExchange": "BSE",

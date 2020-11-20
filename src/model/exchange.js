@@ -9,6 +9,9 @@ const stockExchange = mongoose.Schema({
     },
     price : {
         type : Number
+    },
+    volume : {
+        type : Number
     }
 },{
     timestamps: true
