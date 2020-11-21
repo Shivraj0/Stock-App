@@ -1,6 +1,8 @@
 const stockSchema = require('../model/stock');
+// Below scehma not required as of now.
 // const exchangeSchema = require('../model/exchange');
 
+// Method to verify user input.
 const verifyInput = (stock, exchange, price, volume) => {
     if(!stock){
         return res.status(400).send({
@@ -21,6 +23,34 @@ const verifyInput = (stock, exchange, price, volume) => {
     };
 };
 
+/*
+    ### Api to buy stocks.
+
+    METHOD: POST
+
+    Sample Input : {
+        "stockName": "RELIANCE",
+        "stockExchange": "NSE",
+        "buyPrice": 250,
+        "volume": 50
+    }
+
+    Sample Output: {
+        "POST": true,
+        "status": "success",
+        "details": {
+            "_id": "5fb8fbaceeea5f326c94ffa5",
+            "stockName": "RELIANCE",
+            "stockExchange": "NSE",
+            "buyPrice": 250,
+            "volume": 50,
+            "createdAt": "2020-11-21T11:36:12.214Z",
+            "updatedAt": "2020-11-21T11:36:12.214Z",
+            "__v": 0
+        }
+    }
+
+*/
 exports.buy = (req, res) => {
     const stock = req.body.stockName;
     const exchange = req.body.stockExchange;
@@ -53,6 +83,38 @@ exports.buy = (req, res) => {
     
 };
 
+/*
+    ### Api to list stocks.
+
+    METHOD: GET
+    
+    Sample Output: {
+        "GET": true,
+        "status": "success",
+        "detais": [
+            {
+                "_id": "5fb806f12273af276880dce2",
+                "stockName": "ADANIGREENS",
+                "stockExchange": "NSE",
+                "buyPrice": 100,
+                "volume": 1000,
+                "createdAt": "2020-11-20T18:12:02.012Z",
+                "updatedAt": "2020-11-20T18:12:02.012Z",
+                "__v": 0
+            },
+            {
+                "_id": "5fb8fbaceeea5f326c94ffa5",
+                "stockName": "RELIANCE",
+                "stockExchange": "NSE",
+                "buyPrice": 250,
+                "volume": 50,
+                "createdAt": "2020-11-21T11:36:12.214Z",
+                "updatedAt": "2020-11-21T11:36:12.214Z",
+                "__v": 0
+            }
+        ]
+    }
+*/
 exports.list = ((req, res) => {
     stockSchema.find((err, doc) => {
         if(err) return res.status(400).send(err);
@@ -68,6 +130,28 @@ exports.list = ((req, res) => {
     });
 });
 
+/*
+    ### Api to find stock with given name.
+    
+    METHOD: GET
+
+    Sample Input: localhost:3000/api/<STOCK_NAME> i.e localhost:3000/api/RELIANCE
+
+    Sample Output: {
+        "GET": true,
+        "status": "success",
+        "details": {
+            "_id": "5fb8fbaceeea5f326c94ffa5",
+            "stockName": "RELIANCE",
+            "stockExchange": "NSE",
+            "buyPrice": 250,
+            "volume": 50,
+            "createdAt": "2020-11-21T11:36:12.214Z",
+            "updatedAt": "2020-11-21T11:36:12.214Z",
+            "__v": 0
+        }
+    }
+*/
 exports.find = ((req, res) => {
     stockSchema.findOne({stockName: req.params.stockName}, (err, doc) => {
         if(err) return res.status(400).send(err);
@@ -82,6 +166,34 @@ exports.find = ((req, res) => {
         });
     });
 });
+
+/*
+    ### Api to update existing stock.
+
+    METHOD: PUT
+
+    Sample Input: {
+        "stockName": "RELIANCE",
+        "stockExchange": "NSE",
+        "buyPrice": 250,
+        "volume": 30
+    }
+
+    Sample Output: {
+        "PUT": true,
+        "status": "success",
+        "details": {
+            "_id": "5fb8fbaceeea5f326c94ffa5",
+            "stockName": "RELIANCE",
+            "stockExchange": "NSE",
+            "buyPrice": 250,
+            "volume": 50,
+            "createdAt": "2020-11-21T11:36:12.214Z",
+            "updatedAt": "2020-11-21T11:36:12.214Z",
+            "__v": 0
+        }
+    }
+*/
 
 exports.update = ((req, res) => {
 
@@ -112,6 +224,28 @@ exports.update = ((req, res) => {
     });
 });
 
+/*
+    ### Api to sell stocks.
+
+    METHOD: DELETE
+
+    Sample Input: localhost:3000/api/sell/<stock_name> i.e localhost:3000/api/sell/RELIANCE
+
+    Sample Output: {
+        "PUT": true,
+        "status": "success",
+        "details": {
+            "_id": "5fb8fbaceeea5f326c94ffa5",
+            "stockName": "RELIANCE",
+            "stockExchange": "NSE",
+            "buyPrice": 250,
+            "volume": 50,
+            "createdAt": "2020-11-21T11:36:12.214Z",
+            "updatedAt": "2020-11-21T11:36:12.214Z",
+            "__v": 0
+        }
+    }
+*/
 exports.sell = ((req, res) => {
     stockSchema.findOneAndDelete({stockName: req.params.stockName}, (err, doc) => {
         if(err) return res.status(400).send(err);
