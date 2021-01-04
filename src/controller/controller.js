@@ -72,6 +72,7 @@ exports.buy = (req, res) => {
 
     METHOD: GET
 
+    URL: localhost:/3000/api/list
 */
 
 exports.list = ((req, res) => {
